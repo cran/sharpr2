@@ -23,7 +23,7 @@
 #' # sharpr2(data)
 
 
-sharpr2 <- function(data, l_min = 150, l_max = 600, f_rna = 10, f_dna = 0, s_a = 300, verbose = FALSE, auto = TRUE, sig = TRUE, len = FALSE, alpha = 0.05, win = 5, mse = FALSE)
+sharpr2 <- function(data, l_min = 150, l_max = 600, f_rna = 10, f_dna = 0, s_a = 300, verbose = FALSE, auto = TRUE, sig = TRUE, len = FALSE, alpha = 0.05, win = 5, mse = FALSE, max_t = 1)
 {
 	data$length <- data$end - data$start + 1
 	
@@ -40,6 +40,9 @@ sharpr2 <- function(data, l_min = 150, l_max = 600, f_rna = 10, f_dna = 0, s_a =
 	{
 		stop("The argument alpha must be between 0 and 1.")
 	}
+	
+	if(max_t>1)
+	{max_t <- 1}
 	
 	if(verbose == TRUE)
 	{
@@ -128,7 +131,7 @@ sharpr2 <- function(data, l_min = 150, l_max = 600, f_rna = 10, f_dna = 0, s_a =
 				motif <- NA
 				thres <- NA
 			}else{
-				re <- sharpr2_local_r(t_d[,c('start','end','length','val','w')], len = len_t, verbose = verbose, mse = mse)
+				re <- sharpr2_local_r(t_d[,c('start','end','length','val','w')], len = len_t, verbose = verbose, mse = mse, max_t = max_t)
 				# re <- sharpr2_local(t_d[,c('start','end','length','val','w')], s_m=1, s_a=1000, m_a=0, weight=FALSE, ci=ci)
 				if(!is.na(re$est_a[1]))
 				{
@@ -149,6 +152,11 @@ sharpr2 <- function(data, l_min = 150, l_max = 600, f_rna = 10, f_dna = 0, s_a =
 					motif <- NA
 					thres <- NA
 				}
+			}
+			
+			if(verbose == TRUE)
+			{
+				print(i)
 			}
 		}else{
 			re <- list(est_a = rep(t_d$val,t_d$end-t_d$start+1), mse = NA, var_nb = NA, lambda = NA)

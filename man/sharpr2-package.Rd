@@ -2,17 +2,17 @@
 \alias{sharpr2-package}
 \docType{package}
 \title{
-Estimating regularoty scores and identifying high resolution driver elements for HiDRA data
+Estimating regularoty scores and identifying high resolution driver elements for ATAC-STARR data
 }
 \description{
-The package develops an algorithm for identifying high-resolution driver elements for datasets from a HiDRA (High-Definition Reporter Assay) library. 
+The package develops an algorithm for identifying high-resolution driver elements for datasets from an ATAC-STARR library. 
 }
 \details{
 \tabular{ll}{
 Package: \tab sharpr2\cr
 Type: \tab Package\cr
-Version: \tab 1.0.0.0000 \cr
-Date: \tab 2017-10-13\cr
+Version: \tab 1.1.1.0000 \cr
+Date: \tab 2018-05-12\cr
 License: \tab GPL \cr
 }
 }

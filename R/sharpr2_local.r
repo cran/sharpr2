@@ -19,15 +19,21 @@ sharpr2_local <- function(data, s_a = 1000, s_m = 1, m_a = 0, len = 1, verbose =
 		L[1,1] <- len
 	}
 
-	mu_a <- rep(m_a,max_b)
-	sigma_a <- diag(s_a,max_b)
+	# mu_a <- rep(m_a,max_b)
+	# sigma_a <- diag(s_a,max_b)
+	# sigma_a <- s_a*Diagonal(max_b)
 
-	sigma_m <- diag(rep(s_m,nr))
+	# sigma_m <- diag(rep(s_m,nr))
 	
 	L_i <- solve(L)
 	
+	if(ncol(T)>5000)
+	{
+		T <- Matrix(T, sparse=TRUE)
+	}
+			
 	X <- L_i%*%T
-
+	
 	#cov_am <- sigma_a%*%t(T)%*%L_i
 	#cov_m <- sigma_m + X%*%cov_am
 	#cov_m_i <- solve(cov_m)
@@ -48,8 +54,8 @@ sharpr2_local <- function(data, s_a = 1000, s_m = 1, m_a = 0, len = 1, verbose =
 	if(is.na(s_d[1]))
 	{
 		if(verbose==TRUE)
-		{warning("A tile region is skipped due to an error in SVD.")}
-		invisible(list(est_a = NA, sd_e = NA, lambda = NA))
+		{warning("A tiled region is skipped due to an error in SVD.")}
+		return(invisible(list(est_a = NA, var_nb = NA, mse = NA, lambda = NA, trh = NA)))
 	}
 	
 	
@@ -65,14 +71,29 @@ sharpr2_local <- function(data, s_a = 1000, s_m = 1, m_a = 0, len = 1, verbose =
 		# xtx <- t(X)%*%X
 		# w_1 <- solve(xtx+lambda*diag(1,ncol(X)))
 		# w1x <- w_1%*%t(X)
-		h <- X%*%w1x
-		w <- w1x%*%X
-		yxb <- data[,'val']-X%*%est_a
-		sigma_e <- t(yxb)%*%yxb/(nrow(X)-2*sum(diag(h))+sum(diag(h%*%t(h))))
-		w_b <- (w - diag(1,nrow(w)))%*%est_a
-		# sd_e <- sqrt(diag(sigma_e[1,1]*w%*%t(w_1) + w_b%*%t(w_b)))
-		sd_nb <- sigma_e[1,1]*w1x%*%t(w1x)
-		sd_e <- sqrt(diag(sd_nb + w_b%*%t(w_b)))
+		h <- as.matrix(X%*%w1x)
+		
+		yxb <- as.matrix(data[,'val']-X%*%est_a)
+		
+		# sigma_e <- t(yxb)%*%yxb/(nrow(X)-2*sum(diag(h))+sum(diag(h%*%t(h))))
+		sigma_e <- crossprod(yxb)/(nrow(X)-2*sum(diag(h))+sum(diag(tcrossprod(h))))
+		# sd_nb <- sigma_e[1,1]*w1x%*%t(w1x)
+		sd_nb <- sigma_e[1,1]*tcrossprod(w1x)
+		
+		if(mse==TRUE)
+		{
+			if(ncol(X)>5000)
+			{
+				X <- Matrix(X, sparse=TRUE)
+			}
+			## a little slow
+			w <- w1x%*%X
+			## a little slow
+			w_b <- (w - diag(1,nrow(w)))%*%est_a
+			# sd_e <- sqrt(diag(sigma_e[1,1]*w%*%t(w_1) + w_b%*%t(w_b)))
+			## a little slow
+			sd_e <- sqrt(diag(sd_nb + w_b%*%t(w_b)))
+		}
 	#}
 
 	if(mse==TRUE)

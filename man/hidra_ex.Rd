@@ -2,7 +2,7 @@
 \alias{hidra_ex}
 \docType{data}
 \title{
-An example dataset including a region of one chromosome from a HiDRA library  
+An example dataset including a region of one chromosome from an ATAC-STARR library  
 }
 \description{
 This is an example dataset containing 10000 fragments with four columns 'start', 'end', 'PLASMID', 'RNA'. 

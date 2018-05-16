@@ -6,10 +6,10 @@
 \usage{
 sharpr2(data, l_min = 150, l_max = 600, f_rna = 10, f_dna = 0,
   s_a = 300, verbose = FALSE, auto = TRUE, sig = TRUE, len = FALSE, 
-  alpha = 0.05, win = 5, mse = FALSE)
+  alpha = 0.05, win = 5, mse = FALSE, max_t = 1)
 }
 \arguments{
-\item{data}{A data.frame containing a HiDRA dataset for one chromosome. The data.frame must contain four columns: 'start', 'end', 'PLASMID', 'RNA'. 'PLASMID' and 'RNA' are the values for DNA and RNA, which should be non-negative real numbers (average value over multiple replicates) or integers (counts).}
+\item{data}{A data.frame containing an ATAC-STARR dataset for one chromosome. The data.frame must contain four columns: 'start', 'end', 'PLASMID', 'RNA'. 'PLASMID' and 'RNA' are the values for DNA and RNA, which should be non-negative real numbers (average value over multiple replicates) or integers (counts).}
 
 \item{l_min}{The fragments with a length smaller than l_min will not be processed. The default is 150.}
 
@@ -34,6 +34,8 @@ sharpr2(data, l_min = 150, l_max = 600, f_rna = 10, f_dna = 0,
 \item{win}{A window size for removing sporadic identified significant regions. If a significant consecutive region is small than \emph{win}, it will be treated as false signals. The default is 5.}
 
 \item{mse}{An indicator of whether mean square errors are included in the output results. The default is FALSE.}
+
+\item{max_t}{A value between 0 and 1, indicating the proportion of non-zero eigenvectors used to calculate \eqn{\lambda} when auto=TRUE. The default is 1.}
 
 }
 \value{
